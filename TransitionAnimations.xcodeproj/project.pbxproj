@@ -347,6 +347,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thoughtworks.example.TransitionAnimations;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -359,6 +360,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.thoughtworks.example.TransitionAnimations;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -410,6 +412,7 @@
 				7EFB3D3D1F188BE4003ABDC2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7EFB3D3E1F188BE4003ABDC2 /* Build configuration list for PBXNativeTarget "TransitionAnimationsTests" */ = {
 			isa = XCConfigurationList;
@@ -418,6 +421,7 @@
 				7EFB3D401F188BE4003ABDC2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

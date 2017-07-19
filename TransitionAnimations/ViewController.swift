@@ -29,10 +29,12 @@ class ViewController: UIViewController {
             
         case "Curve Linear":
             destVC.transitioningDelegate = self
+            animator.originFrame = CGRect.zero
             animator.animation = .curveLinear
             
         case "Curve Ease In":
             destVC.transitioningDelegate = self
+            animator.originFrame = (sender.superview?.convert(sender.frame, to: nil))!
             animator.animation = .curveEaseIn
         default:
             ()

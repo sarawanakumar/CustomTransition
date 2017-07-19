@@ -19,6 +19,7 @@ class TransitioningAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     var animation: Animation!
     var transDuration = 2.0
     var isDestinationPresented = false
+    var originFrame = CGRect.zero
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return transDuration
@@ -26,10 +27,13 @@ class TransitioningAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerV = transitionContext.containerView
-        //let fromV = transitionContext.view(forKey: UITransitionContextViewKey.from)
+        let fromV = transitionContext.view(forKey: UITransitionContextViewKey.from)
         let toV = transitionContext.view(forKey: UITransitionContextViewKey.to)
-        let originFrame = CGRect.zero
-        let finalFrame = toV?.frame
+        let destinationView = isDestinationPresented ? fromV : toV
+        let initialFrame = isDestinationPresented ? destinationView?.frame : originFrame
+        let finalFrame = isDestinationPresented ? CGRect.zero : destinationView?.frame
+        let xScaleFactor = !isDestinationPresented ? (initialFrame?.width)! / (finalFrame?.width)! : (finalFrame?.width)! / (initialFrame?.width)!
+        let yScaleFactor = !isDestinationPresented ? (initialFrame?.height)! / (finalFrame?.height)! : (finalFrame?.height)! / (initialFrame?.height)!
         
         switch animation! {
         case .fadeIn:
@@ -43,27 +47,48 @@ class TransitioningAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             }
             
         case .curveLinear:
-            toV?.frame = originFrame
+            let transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
             containerV.addSubview(toV!)
+            containerV.bringSubview(toFront: destinationView!)
+            
+            if !isDestinationPresented {
+                destinationView?.transform = transform
+                destinationView?.center = CGPoint(x: (initialFrame?.midX)!, y: (initialFrame?.midY)!)
+                destinationView?.clipsToBounds = true
+            }
+            
+            //containerV.transform = transform
             
             UIView.animate(withDuration: transDuration, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.curveLinear, animations: { 
-                toV?.frame = finalFrame!
+                destinationView?.transform = self.isDestinationPresented ? transform : CGAffineTransform.identity
+                destinationView?.center = CGPoint(x: (finalFrame?.midX)!, y: (finalFrame?.midY)!)
+                //toV?.frame = finalFrame!
             }, completion: { (_) in
                 self.isDestinationPresented = !self.isDestinationPresented
                 transitionContext.completeTransition(true)
             })
             
         case .curveEaseIn:
-            toV?.frame = originFrame
+            let transform = CGAffineTransform(scaleX: xScaleFactor, y: yScaleFactor)
             containerV.addSubview(toV!)
+            containerV.bringSubview(toFront: destinationView!)
             
-            UIView.animate(withDuration: transDuration, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.3, options: UIViewAnimationOptions.curveEaseIn, animations: {
-                toV?.frame = finalFrame!
+            if !isDestinationPresented {
+                destinationView?.transform = transform
+                destinationView?.center = CGPoint(x: (initialFrame?.midX)!, y: (initialFrame?.midY)!)
+                destinationView?.clipsToBounds = true
+            }
+            
+            //containerV.transform = transform
+            
+            UIView.animate(withDuration: transDuration, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.curveEaseIn, animations: {
+                destinationView?.transform = self.isDestinationPresented ? transform : CGAffineTransform.identity
+                destinationView?.center = CGPoint(x: (finalFrame?.midX)!, y: (finalFrame?.midY)!)
+                //toV?.frame = finalFrame!
             }, completion: { (_) in
                 self.isDestinationPresented = !self.isDestinationPresented
                 transitionContext.completeTransition(true)
             })
-
         }
         
     }
